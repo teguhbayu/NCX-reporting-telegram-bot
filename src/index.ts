@@ -23,7 +23,6 @@ async function sendMessage() {
 }
 
 console.log("Running Telegram Bot");
-// sendMessage()
 
 let now = new Date();
 let millisTill = ((new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0)) as unknown as number) - (now as unknown as number)

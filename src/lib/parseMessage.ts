@@ -18,7 +18,8 @@ ${RBS.map(
   (i) =>
     `🔴 <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}`
+👤 ${i.AM_VALIDASI}
+📑 ${i.LI_PRODUCT_NAME}`
 ).join("\n-----------\n")}
 cc : pak <a href="tg://user?id=107034617">@aawaris</a>`;
 
@@ -29,7 +30,8 @@ ${DGS.map(
   (i) =>
     `🔴 <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}`
+👤 ${i.AM_VALIDASI}
+📑 ${i.LI_PRODUCT_NAME}`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=84620775">@raunsayGil</a>`;
@@ -41,7 +43,8 @@ ${DPS.map(
   (i) =>
     `🔴 <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}`
+👤 ${i.AM_VALIDASI}
+📑 ${i.LI_PRODUCT_NAME}`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
@@ -53,7 +56,8 @@ ${DSS.map(
   (i) =>
     `🔴 <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}`
+👤 ${i.AM_VALIDASI}
+📑 ${i.LI_PRODUCT_NAME}`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
