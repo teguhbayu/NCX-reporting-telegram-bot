@@ -55,6 +55,71 @@ export default interface dataNCX {
   SERVICE_WITEL: string | undefined;
   EDK_STATUS: string | undefined;
   SEGMENT_VALIDASI: "DGS" | "DPS" | "DSS" | "RBS";
-  AM_VALIDASI: string;
+  AM_VALIDASI:
+    | "AMAR, KANA"
+    | "ARIEF RAHMAN"
+    | "BAWIAS, RIVO"
+    | "DJABAR TIMUMUN"
+    | "FAJAR, MARWAN"
+    | "FIKRI RAMADAN, MOH."
+    | "HALID, FITYAN"
+    | "LIMONU, DESRIYANTI"
+    | "MUHAMMAD, MUHAMMAD"
+    | "NUGROHO, AGUNG"
+    | "P. TOAGO, SADDAM"
+    | "PRAMONO RAUF, MOH.INDRA"
+    | "RIESKA ALFIAH, RANIYANTI"
+    | "SHINTA KRISTIANTI, THERESIA"
+    | "ZULFIKAR, ZULFIKAR";
   INPUTER_VALIDASI: string;
+}
+
+export interface AMDATA {
+  name:
+    | "AMAR, KANA"
+    | "ARIEF RAHMAN"
+    | "BAWIAS, RIVO"
+    | "DJABAR TIMUMUN"
+    | "FAJAR, MARWAN"
+    | "FIKRI RAMADAN, MOH."
+    | "HALID, FITYAN"
+    | "LIMONU, DESRIYANTI"
+    | "MUHAMMAD, MUHAMMAD"
+    | "NUGROHO, AGUNG"
+    | "P. TOAGO, SADDAM"
+    | "PRAMONO RAUF, MOH.INDRA"
+    | "RIESKA ALFIAH, RANIYANTI"
+    | "SHINTA KRISTIANTI, THERESIA"
+    | "ZULFIKAR, ZULFIKAR";
+  username: string;
+  id: string;
+  data: dataNCX[];
+}
+
+export interface dataCount{
+  pending: number;
+  billing: number;
+  complete: number;
+}
+
+export interface COUNTDATA {
+  name:
+    | "AMAR, KANA"
+    | "ARIEF RAHMAN"
+    | "BAWIAS, RIVO"
+    | "DJABAR TIMUMUN"
+    | "FAJAR, MARWAN"
+    | "FIKRI RAMADAN, MOH."
+    | "HALID, FITYAN"
+    | "LIMONU, DESRIYANTI"
+    | "MUHAMMAD, MUHAMMAD"
+    | "NUGROHO, AGUNG"
+    | "P. TOAGO, SADDAM"
+    | "PRAMONO RAUF, MOH.INDRA"
+    | "RIESKA ALFIAH, RANIYANTI"
+    | "SHINTA KRISTIANTI, THERESIA"
+    | "ZULFIKAR, ZULFIKAR";
+  username: string;
+  id: string;
+  data?: dataCount;
 }

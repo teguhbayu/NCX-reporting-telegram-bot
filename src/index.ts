@@ -1,37 +1,39 @@
-import bot from "./lib/bot";
-import getData from "./api/ncx";
-import filterData from "./lib/filter";
-import parseMessage from "./lib/parseMessage";
+import { sendBASOMessage, sendCountMessage, sendResumeMessage, sendSuspendMessage } from "./lib/sendMessage";
+import { sleep } from "./utils/atomics";
 
 const chatId = process.env.GROUP_CHAT_ID!;
-const topicID = process.env.GROUP_TOPIC_ID! as unknown as number
-
-async function sendMessage() {
-  try {
-    const get = await getData();
-    const { RBS, DGS, DPS, DSS } = await filterData(get.data);
-    const message = await parseMessage(RBS, DGS, DPS, DSS);
-    await bot.sendMessage(chatId, message.rbs, { parse_mode: "HTML", reply_to_message_id: topicID });
-    await bot.sendMessage(chatId, message.dgs, { parse_mode: "HTML", reply_to_message_id: topicID });
-    await bot.sendMessage(chatId, message.dps, { parse_mode: "HTML", reply_to_message_id: topicID });
-    await bot.sendMessage(chatId, message.dss, { parse_mode: "HTML", reply_to_message_id: topicID });
-    console.log("Message sent!")
-  } catch (e) {
-    console.log(e);
-    await bot.sendMessage(chatId, "Internal Server Error");
-  }
-}
+const suspendID = process.env.SUSPEND_TOPIC_ID! as unknown as number;
+const resumeID = process.env.RESUME_TOPIC_ID! as unknown as number;
+const pendingID = process.env.PENDING_TOPIC_ID! as unknown as number;
+const progressID = process.env.PROGRESS_TOPIC_ID! as unknown as number;
 
 console.log("Running Telegram Bot");
 
+
 let now = new Date();
-let millisTill = ((new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0)) as unknown as number) - (now as unknown as number)
+let millisTill =
+  (new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    8,
+    0,
+    0,
+    0
+  ) as unknown as number) - (now as unknown as number);
 if (millisTill < 0) {
   millisTill += 86400000;
 }
-setTimeout(function () {
-  sendMessage()
+setTimeout(async function () {
+  console.log("sending Suspend info...")
+  await sendSuspendMessage(chatId, suspendID);
+  await sleep(5000)
+  console.log("sending Resume info...")
+  await sendResumeMessage(chatId, resumeID);
+  await sleep(5000)
+  console.log("sending BASO info...")
+  await sendBASOMessage(chatId, pendingID)
+  await sleep(5000)
+  console.log("sending Progress info...")
+  await sendBASOMessage(chatId, progressID)
 }, millisTill);
-
-
-
