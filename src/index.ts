@@ -1,3 +1,4 @@
+import { syncData } from "./api/ncx";
 import { sendBASOMessage, sendCountMessage, sendResumeMessage, sendSuspendMessage } from "./lib/sendMessage";
 import { sleep } from "./utils/atomics";
 
@@ -8,7 +9,6 @@ const pendingID = process.env.PENDING_TOPIC_ID! as unknown as number;
 const progressID = process.env.PROGRESS_TOPIC_ID! as unknown as number;
 
 console.log("Running Telegram Bot");
-
 
 let now = new Date();
 let millisTill =
@@ -25,6 +25,10 @@ if (millisTill < 0) {
   millisTill += 86400000;
 }
 setTimeout(async function () {
+  console.log("syncing DB data...")
+  const sync = await syncData()
+  console.log(sync.data)
+  console.log("Data is synced!")
   console.log("sending Suspend info...")
   await sendSuspendMessage(chatId, suspendID);
   await sleep(5000)
