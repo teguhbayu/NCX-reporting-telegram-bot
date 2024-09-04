@@ -2,6 +2,7 @@ import { syncData } from "./api/ncx";
 import {
   sendBASOMessage,
   sendCountMessage,
+  sendInProgressMessage,
   sendResumeMessage,
   sendSuspendMessage,
 } from "./lib/sendMessage";
@@ -14,6 +15,7 @@ const suspendID = process.env.SUSPEND_TOPIC_ID! as unknown as number;
 const resumeID = process.env.RESUME_TOPIC_ID! as unknown as number;
 const pendingID = process.env.PENDING_TOPIC_ID! as unknown as number;
 const progressID = process.env.PROGRESS_TOPIC_ID! as unknown as number;
+const inPID = process.env.INP_TOPIC_ID! as unknown as number;
 
 console.log("Running Telegram Bot");
 
@@ -30,6 +32,9 @@ const job = schedule.scheduleJob('0 8 * * *', async function(){
   await sleep(5000);
   console.log("sending BASO info...");
   await sendBASOMessage(chatId, pendingID);
+  await sleep(5000);
+  console.log("sending In Progress info...");
+  await sendInProgressMessage(chatId, inPID);
   await sleep(5000);
   console.log("sending Progress info...");
   await sendCountMessage(chatId, progressID);

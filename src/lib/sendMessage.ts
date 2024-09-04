@@ -3,11 +3,13 @@ import getData from "../api/ncx";
 import filterDataSuspend, {
   filterDataCount,
   filterDataPendingBASO,
+  filterDataPendingProgres,
   filterDataResume,
 } from "../lib/filter";
 import parseMessageSuspend, {
   parseMessageBASO,
   parseMessageCount,
+  parseMessageInProgress,
   parseMessageResume,
 } from "../lib/parseMessage";
 import { sleep } from "../utils/atomics";
@@ -97,6 +99,36 @@ export async function sendBASOMessage(chatId: string, basoID: number) {
     await bot.sendMessage(chatId, "Internal Server Error", {
       parse_mode: "HTML",
       reply_to_message_id: basoID,
+    });
+  }
+}
+
+export async function sendInProgressMessage(chatId: string, inPID: number) {
+  try {
+    const get = await getData();
+    const { dataByAM } = await filterDataPendingProgres(get.data);
+    const { messages } = await parseMessageInProgress(dataByAM);
+    for (let i = 0, len = messages.length, text = ""; i < len; i++) {
+      await bot.sendMessage(chatId, messages[i], {
+        parse_mode: "HTML",
+        reply_to_message_id: inPID,
+      });
+      console.log(`message sent! (${(i + 1).toString()}/15)`);
+      await sleep(3000);
+    }
+    await bot.sendMessage(
+      chatId,
+      'Berikut Report Data OGP status In Progress per masing2 AM, mohon untuk di follow up yah rekan2\n\ncc : pak <a href="tg://user?id=107034617">@aawaris</a> pak <a href="tg://user?id=21307163">@kfahmi90</a> pak <a href="tg://user?id=84620775">@raunsayGil</a>',
+      {
+        parse_mode: "HTML",
+        reply_to_message_id: inPID,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
+      reply_to_message_id: inPID,
     });
   }
 }

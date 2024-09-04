@@ -181,6 +181,49 @@ export async function parseMessageBASO(sortedData: AMDATA[]) {
   return { messages };
 }
 
+export async function parseMessageInProgress(sortedData: AMDATA[]) {
+  const date = new Date();
+  const day = date.getDate();
+  const month = getMonth(date.getMonth());
+  const year = date.getFullYear();
+  let messages: string[] = [];
+
+  sortedData.map((i) => {
+    if (
+      i.name === "MUHAMMAD, MUHAMMAD"
+    ) {
+      messages.push(
+        `<b>Order Status In Progress - ${i.name}</b> (<a href="tg://user?id=${
+          i.id
+        }">${
+          i.username
+        }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+          .map(
+            (n) =>
+              `🔴 ${n.ORDER_ID} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.SEGMENT_VALIDASI}`
+          )
+          .join("\n")}`
+      );
+    } else {
+      messages.push(
+        `<b>Order Status In Progress - ${i.name}</b> (<a href="tg://user?id=${
+          i.id
+        }">${
+          i.username
+        }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+          .map(
+            (n) =>
+              `🔴 ${n.ORDER_ID} / ${n.ORDER_SUBTYPE} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.AGREE_NAME} / ${n.SEGMENT_VALIDASI} / End Date : ${n.AGREE_END_DATE}`
+          )
+          .join("\n")}`
+      );
+    }
+  }
+);
+
+  return { messages };
+}
+
 export async function parseMessageCount(
   countData: COUNTDATA[],
   totalCount: dataCount
