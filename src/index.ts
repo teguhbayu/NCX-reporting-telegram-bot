@@ -11,7 +11,6 @@ import {
   sendSuspendMessage,
 } from "./lib/sendMessage";
 import { sleep } from "./utils/atomics";
-import bot from "./lib/bot";
 
 
 const chatId = process.env.GROUP_CHAT_ID!;
