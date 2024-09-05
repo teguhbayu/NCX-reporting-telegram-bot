@@ -71,9 +71,22 @@ export default interface dataNCX {
     | "RIESKA ALFIAH, RANIYANTI"
     | "SHINTA KRISTIANTI, THERESIA"
     | "ZULFIKAR, ZULFIKAR";
-  INPUTER_VALIDASI: string;
+  INPUTER_VALIDASI:
+    | "KARINA"
+    | "MAGFIRAH"
+    | "NOVITA"
+    | "SIFA"
+    | "WAWAN"
+    | "YANTO"
+    | "YUNI";
 }
 
+export interface INPDATA {
+  name: "KARINA" | "MAGFIRAH" | "NOVITA" | "SIFA" | "WAWAN" | "YANTO" | "YUNI";
+  username: string;
+  id: string;
+  data: dataNCX[];
+}
 export interface AMDATA {
   name:
     | "AMAR, KANA"
@@ -96,7 +109,7 @@ export interface AMDATA {
   data: dataNCX[];
 }
 
-export interface dataCount{
+export interface dataCount {
   pending: number;
   billing: number;
   complete: number;

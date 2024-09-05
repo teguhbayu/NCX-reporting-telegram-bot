@@ -1,4 +1,4 @@
-import type { AMDATA, COUNTDATA } from "../types/data";
+import type { AMDATA, COUNTDATA, INPDATA } from "../types/data";
 import type dataNCX from "../types/data";
 
 export default async function filterDataSuspend(data: dataNCX[]) {
@@ -177,6 +177,78 @@ export async function filterDataPendingBASO(data: dataNCX[]) {
   });
 
   return { dataByAM };
+}
+
+export async function filterDataPendingBASObyInputer(data: dataNCX[]) {
+  const inputers = [
+    "KARINA",
+    "MAGFIRAH",
+    "NOVITA",
+    "SIFA",
+    "WAWAN",
+    "YANTO",
+    "YUNI",
+  ];
+
+  let dataByInputer: INPDATA[] = [
+    {
+      name: "KARINA",
+      username: "@karinaspoliyama",
+      id: "5200640067",
+      data: [],
+    },
+    {
+      name: "MAGFIRAH",
+      username: "@Magfirha",
+      id: "116744785",
+      data: [],
+    },
+    {
+      name: "NOVITA",
+      username: "@novitazf",
+      id: "1008894420",
+      data: [],
+    },
+    {
+      name: "SIFA",
+      username: "@Silfa_BGES",
+      id: "107580671",
+      data: [],
+    },
+    {
+      name: "WAWAN",
+      username: "@Andiwawan",
+      id: "5033717404",
+      data: [],
+    },
+    {
+      name: "YANTO",
+      username: "@MohNuryanto",
+      id: "97404704",
+      data: [],
+    },
+    {
+      name: "YUNI",
+      username: "@yuniakadji",
+      id: "450302218",
+      data: [],
+    },
+  ];
+
+  inputers.map((inputer) => {
+    let currentAM = dataByInputer.filter((i) => {
+      return i.name === inputer;
+    });
+    currentAM[0].data = data.filter((n) => {
+      return (
+        n.LI_STATUS === "Pending BASO" &&
+        n.INPUTER_VALIDASI === inputer &&
+        n.ORDER_STATUS === "In Progress"
+      );
+    });
+  });
+
+  return { dataByInputer };
 }
 
 export async function filterDataPendingProgres(data: dataNCX[]) {
@@ -414,8 +486,8 @@ export async function filterDataCount(data: dataNCX[]) {
   let totalCount = {
     pending: 0,
     billing: 0,
-    complete: 0
-  }
+    complete: 0,
+  };
 
   admins.map((admin) => {
     let currentAM = countByAM.filter((i) => {
@@ -448,11 +520,11 @@ export async function filterDataCount(data: dataNCX[]) {
     };
   });
 
-  countByAM.map((n)=>{
-    totalCount.billing += n.data?.billing!
-    totalCount.complete += n.data?.complete!
-    totalCount.pending += n.data?.pending!
-  })
+  countByAM.map((n) => {
+    totalCount.billing += n.data?.billing!;
+    totalCount.complete += n.data?.complete!;
+    totalCount.pending += n.data?.pending!;
+  });
 
   return { countByAM, totalCount };
 }

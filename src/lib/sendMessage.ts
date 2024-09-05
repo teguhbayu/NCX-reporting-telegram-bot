@@ -1,23 +1,29 @@
 import bot from "../lib/bot";
-import getData from "../api/ncx";
 import filterDataSuspend, {
   filterDataCount,
   filterDataPendingBASO,
+  filterDataPendingBASObyInputer,
   filterDataPendingProgres,
   filterDataResume,
 } from "../lib/filter";
 import parseMessageSuspend, {
   parseMessageBASO,
+  parseMessageBASObyInputer,
   parseMessageCount,
   parseMessageInProgress,
   parseMessageResume,
 } from "../lib/parseMessage";
+import type { dataQuery } from "../types/query";
 import { sleep } from "../utils/atomics";
+import { recursiveLog } from "../utils/log";
 
-export async function sendSuspendMessage(chatId: string, suspendID: number) {
+export async function sendSuspendMessage(
+  chatId: string,
+  suspendID: number,
+  data: dataQuery
+) {
   try {
-    const get = await getData();
-    const { RBS, DGS, DPS, DSS } = await filterDataSuspend(get.data);
+    const { RBS, DGS, DPS, DSS } = await filterDataSuspend(data.data);
     const message = await parseMessageSuspend(RBS, DGS, DPS, DSS);
     await bot.sendMessage(chatId, message.rbs, {
       parse_mode: "HTML",
@@ -42,10 +48,13 @@ export async function sendSuspendMessage(chatId: string, suspendID: number) {
   }
 }
 
-export async function sendResumeMessage(chatId: string, resumeID: number) {
+export async function sendResumeMessage(
+  chatId: string,
+  resumeID: number,
+  data: dataQuery
+) {
   try {
-    const get = await getData();
-    const { RBS, DGS, DPS, DSS } = await filterDataResume(get.data);
+    const { RBS, DGS, DPS, DSS } = await filterDataResume(data.data);
     const message = await parseMessageResume(RBS, DGS, DPS, DSS);
     await bot.sendMessage(chatId, message.rbs, {
       parse_mode: "HTML",
@@ -73,17 +82,20 @@ export async function sendResumeMessage(chatId: string, resumeID: number) {
   }
 }
 
-export async function sendBASOMessage(chatId: string, basoID: number) {
+export async function sendBASOMessage(
+  chatId: string,
+  basoID: number,
+  data: dataQuery
+) {
   try {
-    const get = await getData();
-    const { dataByAM } = await filterDataPendingBASO(get.data);
+    const { dataByAM } = await filterDataPendingBASO(data.data);
     const { messages } = await parseMessageBASO(dataByAM);
     for (let i = 0, len = messages.length, text = ""; i < len; i++) {
       await bot.sendMessage(chatId, messages[i], {
         parse_mode: "HTML",
         reply_to_message_id: basoID,
       });
-      console.log(`message sent! (${(i + 1).toString()}/15)`);
+      recursiveLog(i, messages.length);
       await sleep(3000);
     }
     await bot.sendMessage(
@@ -103,10 +115,46 @@ export async function sendBASOMessage(chatId: string, basoID: number) {
   }
 }
 
-export async function sendInProgressMessage(chatId: string, inPID: number) {
+export async function sendBASOMessagebyInputer(
+  chatId: string,
+  basoInpID: number,
+  data: dataQuery
+) {
   try {
-    const get = await getData();
-    const { dataByAM } = await filterDataPendingProgres(get.data);
+    const { dataByInputer } = await filterDataPendingBASObyInputer(data.data);
+    const { messages } = await parseMessageBASObyInputer(dataByInputer);
+    for (let i = 0, len = messages.length, text = ""; i < len; i++) {
+      await bot.sendMessage(chatId, messages[i], {
+        parse_mode: "HTML",
+        reply_to_message_id: basoInpID,
+      });
+      recursiveLog(i, messages.length);
+      await sleep(3000);
+    }
+    await bot.sendMessage(
+      chatId,
+      'Berikut Report Data OGP status pending BASO per masing2 Inputer, mohon untuk di follow up yah rekan2\n\ncc : pak <a href="tg://user?id=107034617">@aawaris</a> pak <a href="tg://user?id=21307163">@kfahmi90</a> pak <a href="tg://user?id=84620775">@raunsayGil</a>',
+      {
+        parse_mode: "HTML",
+        reply_to_message_id: basoInpID,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
+      reply_to_message_id: basoInpID,
+    });
+  }
+}
+
+export async function sendInProgressMessage(
+  chatId: string,
+  inPID: number,
+  data: dataQuery
+) {
+  try {
+    const { dataByAM } = await filterDataPendingProgres(data.data);
     const { messages } = await parseMessageInProgress(dataByAM);
     for (let i = 0, len = messages.length, text = ""; i < len; i++) {
       await bot.sendMessage(chatId, messages[i], {
@@ -133,10 +181,13 @@ export async function sendInProgressMessage(chatId: string, inPID: number) {
   }
 }
 
-export async function sendCountMessage(chatId: string, basoID: number) {
+export async function sendCountMessage(
+  chatId: string,
+  basoID: number,
+  data: dataQuery
+) {
   try {
-    const get = await getData();
-    const { countByAM, totalCount } = await filterDataCount(get.data);
+    const { countByAM, totalCount } = await filterDataCount(data.data);
     const message = await parseMessageCount(countByAM, totalCount);
 
     await bot.sendMessage(chatId, message, {

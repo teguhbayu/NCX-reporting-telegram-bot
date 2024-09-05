@@ -1,7 +1,15 @@
-import type { AMDATA, COUNTDATA, dataCount } from "../types/data";
+import type { AMDATA, COUNTDATA, dataCount, INPDATA } from "../types/data";
 import type dataNCX from "../types/data";
 import { getMonth } from "../utils/atomics";
 
+/**
+ * This function is used to parse the message that contains Suspend sales data.
+ *
+ * @param {dataNCX[]} RBS Filtered data of RBS.
+ * @param {dataNCX[]} DGS Filtered data of DGS.
+ * @param {dataNCX[]} DPS Filtered data of DPS.
+ * @param {dataNCX[]} DSS Filtered data of DSS.
+ */
 export default async function parseMessageSuspend(
   RBS: dataNCX[],
   DGS: dataNCX[],
@@ -66,6 +74,14 @@ cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
   return { rbs, dgs, dps, dss };
 }
 
+/**
+ * This function is used to parse the message that contains Resume sales data.
+ *
+ * @param {dataNCX[]} RBS Filtered data of RBS.
+ * @param {dataNCX[]} DGS Filtered data of DGS.
+ * @param {dataNCX[]} DPS Filtered data of DPS.
+ * @param {dataNCX[]} DSS Filtered data of DSS.
+ */
 export async function parseMessageResume(
   RBS: dataNCX[],
   DGS: dataNCX[],
@@ -138,6 +154,11 @@ cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
   return { rbs, dgs, dps, dss };
 }
 
+/**
+ * This function is used to parse the message that contains Pending Baso sales data.
+ *
+ * @param {AMDATA[]} sortedData data returned from filterDataPendingBASO function.
+ */
 export async function parseMessageBASO(sortedData: AMDATA[]) {
   const date = new Date();
   const day = date.getDate();
@@ -181,6 +202,70 @@ export async function parseMessageBASO(sortedData: AMDATA[]) {
   return { messages };
 }
 
+/**
+ * This function is used to parse the message that contains Pending Baso sales data by inputer.
+ *
+ * @param {AMDATA[]} sortedData data returned from filterDataPendingBASO function.
+ */
+export async function parseMessageBASObyInputer(sortedData: INPDATA[]) {
+  const date = new Date();
+  const day = date.getDate();
+  const month = getMonth(date.getMonth());
+  const year = date.getFullYear();
+  let messages: string[] = [];
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky"
+      ];
+    } else {
+      return name;
+    }
+  }
+
+  sortedData.map((i) => {
+    messages.push(
+      `<b>Order Status Pending BASO - ${i.name}</b> (<a href="tg://user?id=${
+        i.id
+      }">${i.username}</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+        .map(
+          (n) =>
+            `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+              n.SERVACCNTNAME?.length! > 13
+                ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+                : n.SERVACCNTNAME
+            } / ${filterLongName(n.LI_PRODUCT_NAME!)} / AM : ${
+              n.AM_VALIDASI.split(" ")[0]
+            }`
+        )
+        .join("\n")}`
+    );
+  });
+
+  return { messages };
+}
+
+/**
+ * This function is used to parse the message that contains In Progress sales data.
+ *
+ * @param {AMDATA[]} sortedData data returned from filterDataPendingProgres function.
+ */
 export async function parseMessageInProgress(sortedData: AMDATA[]) {
   const date = new Date();
   const day = date.getDate();
@@ -189,9 +274,7 @@ export async function parseMessageInProgress(sortedData: AMDATA[]) {
   let messages: string[] = [];
 
   sortedData.map((i) => {
-    if (
-      i.name === "MUHAMMAD, MUHAMMAD"
-    ) {
+    if (i.name === "MUHAMMAD, MUHAMMAD") {
       messages.push(
         `<b>Order Status In Progress - ${i.name}</b> (<a href="tg://user?id=${
           i.id
@@ -218,12 +301,16 @@ export async function parseMessageInProgress(sortedData: AMDATA[]) {
           .join("\n")}`
       );
     }
-  }
-);
+  });
 
   return { messages };
 }
 
+/**
+ * This function is used to parse the message that contains per Admin sales data count.
+ *
+ * @param {COUNTDATA[]} countData per admin all status sales data count
+ */
 export async function parseMessageCount(
   countData: COUNTDATA[],
   totalCount: dataCount
