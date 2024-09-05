@@ -484,6 +484,7 @@ export async function filterDataCount(data: dataNCX[]) {
   ];
 
   let totalCount = {
+    inprogress:0,
     pending: 0,
     billing: 0,
     complete: 0,
@@ -512,8 +513,15 @@ export async function filterDataCount(data: dataNCX[]) {
         n.BULAN_BC === `${month}-${year}`
       );
     }).length;
+    const inprogress = data.filter((n) => {
+      return (
+        n.LI_STATUS === "In Progress" &&
+        n.AM_VALIDASI === admin
+      );
+    }).length;
 
     currentAM[0].data = {
+      inprogress,
       pending,
       billing,
       complete,
@@ -521,6 +529,7 @@ export async function filterDataCount(data: dataNCX[]) {
   });
 
   countByAM.map((n) => {
+    totalCount.inprogress += n.data?.inprogress!;
     totalCount.billing += n.data?.billing!;
     totalCount.complete += n.data?.complete!;
     totalCount.pending += n.data?.pending!;
@@ -586,6 +595,7 @@ export async function filterDataCountbyInputers(data: dataNCX[]) {
   ];
 
   let totalCount = {
+    inprogress:0,
     pending: 0,
     billing: 0,
     complete: 0,
@@ -614,8 +624,15 @@ export async function filterDataCountbyInputers(data: dataNCX[]) {
         n.BULAN_BC === `${month}-${year}`
       );
     }).length;
+    const inprogress = data.filter((n) => {
+      return (
+        n.LI_STATUS === "In Progress" &&
+        n.INPUTER_VALIDASI === inputer
+      );
+    }).length;
 
     currentINP[0].data = {
+      inprogress,
       pending,
       billing,
       complete,
@@ -623,6 +640,7 @@ export async function filterDataCountbyInputers(data: dataNCX[]) {
   });
 
   countByInputer.map((n) => {
+    totalCount.inprogress += n.data?.inprogress!;
     totalCount.billing += n.data?.billing!;
     totalCount.complete += n.data?.complete!;
     totalCount.pending += n.data?.pending!;

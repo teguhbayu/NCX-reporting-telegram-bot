@@ -323,11 +323,11 @@ export async function parseMessageCount(
   const message = `<b>Report Housekeeping Order Sulbagteng</b>\n<i>Update : ${day} ${month} ${year}</i>\n----------------------------\n\n${countData
     .map(
       (i) =>
-        `<b>${i.name}</b> (<a href="tg://user?id=${i.id}">${i.username}</a>)\n- Pending Baso : ${i.data?.pending} Order\n- PBA : ${i.data?.billing} Order\n- Complete : ${i.data?.complete} Order`
+        `<b>${i.name}</b> (<a href="tg://user?id=${i.id}">${i.username}</a>)\n- In Progress : ${i.data?.inprogress}\n- Pending Baso : ${i.data?.pending} Order\n- PBA : ${i.data?.billing} Order\n- Complete : ${i.data?.complete} Order`
     )
     .join(
       "\n\n"
-    )}\n\n----------------------------\n<b>Total All</b>\n- Pending Baso : ${
+    )}\n\n----------------------------\n<b>Total All</b>\n- In Progress : ${totalCount.inprogress}\n- Pending Baso : ${
     totalCount.pending
   } Order\n- PBA : ${totalCount.billing} Order\n- Complete : ${
     totalCount.complete

@@ -113,6 +113,7 @@ export interface dataCount {
   pending: number;
   billing: number;
   complete: number;
+  inprogress:number;
 }
 
 export interface COUNTDATA {
