@@ -131,7 +131,14 @@ export interface COUNTDATA {
     | "PRAMONO RAUF, MOH.INDRA"
     | "RIESKA ALFIAH, RANIYANTI"
     | "SHINTA KRISTIANTI, THERESIA"
-    | "ZULFIKAR, ZULFIKAR";
+    | "ZULFIKAR, ZULFIKAR"
+    | "KARINA"
+    | "MAGFIRAH"
+    | "NOVITA"
+    | "SIFA"
+    | "WAWAN"
+    | "YANTO"
+    | "YUNI";
   username: string;
   id: string;
   data?: dataCount;

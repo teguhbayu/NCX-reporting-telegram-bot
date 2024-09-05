@@ -1,6 +1,7 @@
 import bot from "../lib/bot";
 import filterDataSuspend, {
   filterDataCount,
+  filterDataCountbyInputers,
   filterDataPendingBASO,
   filterDataPendingBASObyInputer,
   filterDataPendingProgres,
@@ -200,6 +201,29 @@ export async function sendCountMessage(
     await bot.sendMessage(chatId, "Internal Server Error", {
       parse_mode: "HTML",
       reply_to_message_id: basoID,
+    });
+  }
+}
+
+export async function sendCountbyInputerMessage(
+  chatId: string,
+  countID: number,
+  data: dataQuery
+) {
+  try {
+    const { countByInputer, totalCount } = await filterDataCountbyInputers(data.data);
+    const message = await parseMessageCount(countByInputer, totalCount);
+
+    await bot.sendMessage(chatId, message, {
+      parse_mode: "HTML",
+      reply_to_message_id: countID,
+    });
+    console.log(`message sent!`);
+  } catch (e) {
+    console.log(e);
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
+      reply_to_message_id: countID,
     });
   }
 }

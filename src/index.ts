@@ -1,15 +1,15 @@
+import schedule from "node-schedule";
 import getData, { syncData } from "./api/ncx";
-import bot from "./lib/bot";
 import {
   sendBASOMessage,
   sendBASOMessagebyInputer,
+  sendCountbyInputerMessage,
   sendCountMessage,
   sendInProgressMessage,
   sendResumeMessage,
   sendSuspendMessage,
 } from "./lib/sendMessage";
 import { sleep } from "./utils/atomics";
-import schedule from "node-schedule";
 
 const chatId = process.env.GROUP_CHAT_ID!;
 const suspendID = process.env.SUSPEND_TOPIC_ID! as unknown as number;
@@ -46,4 +46,6 @@ const job = schedule.scheduleJob("0 8 * * *", async function () {
   await sleep(5000);
   console.log("sending Progress info...");
   await sendCountMessage(chatId, progressID, data);
+  await sleep(5000);
+  await sendCountbyInputerMessage(chatId, progressID, data);
 });

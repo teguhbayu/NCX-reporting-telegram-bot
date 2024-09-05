@@ -1,5 +1,5 @@
-import type { AMDATA, COUNTDATA, INPDATA } from "../types/data";
 import type dataNCX from "../types/data";
+import type { AMDATA, COUNTDATA, INPDATA } from "../types/data";
 
 export default async function filterDataSuspend(data: dataNCX[]) {
   const RBS = data.filter((n) => {
@@ -527,4 +527,106 @@ export async function filterDataCount(data: dataNCX[]) {
   });
 
   return { countByAM, totalCount };
+}
+
+export async function filterDataCountbyInputers(data: dataNCX[]) {
+  const date = new Date();
+  const month =
+    (date.getMonth() + 1).toString().length < 2
+      ? "0" + (date.getMonth() + 1).toString()
+      : date.getMonth() + 1;
+  const year = date.getFullYear().toString();
+
+  const inputers = [
+    "KARINA",
+    "MAGFIRAH",
+    "NOVITA",
+    "SIFA",
+    "WAWAN",
+    "YANTO",
+    "YUNI",
+  ];
+
+  let countByInputer: COUNTDATA[] = [
+    {
+      name: "KARINA",
+      username: "@karinaspoliyama",
+      id: "5200640067",
+    },
+    {
+      name: "MAGFIRAH",
+      username: "@Magfirha",
+      id: "116744785",
+    },
+    {
+      name: "NOVITA",
+      username: "@novitazf",
+      id: "1008894420",
+    },
+    {
+      name: "SIFA",
+      username: "@Silfa_BGES",
+      id: "107580671",
+    },
+    {
+      name: "WAWAN",
+      username: "@Andiwawan",
+      id: "5033717404",
+    },
+    {
+      name: "YANTO",
+      username: "@MohNuryanto",
+      id: "97404704",
+    },
+    {
+      name: "YUNI",
+      username: "@yuniakadji",
+      id: "450302218",
+    },
+  ];
+
+  let totalCount = {
+    pending: 0,
+    billing: 0,
+    complete: 0,
+  };
+
+  inputers.map((inputer) => {
+    let currentINP = countByInputer.filter((i) => {
+      return i.name === inputer;
+    });
+    const pending = data.filter((n) => {
+      return (
+        n.LI_STATUS === "Pending BASO" &&
+        n.INPUTER_VALIDASI === inputer &&
+        n.ORDER_STATUS === "In Progress"
+      );
+    }).length;
+    const billing = data.filter((n) => {
+      return (
+        n.LI_STATUS === "Pending Billing Approval" && n.INPUTER_VALIDASI === inputer
+      );
+    }).length;
+    const complete = data.filter((n) => {
+      return (
+        n.LI_STATUS === "Complete" &&
+        n.INPUTER_VALIDASI === inputer &&
+        n.BULAN_BC === `${month}-${year}`
+      );
+    }).length;
+
+    currentINP[0].data = {
+      pending,
+      billing,
+      complete,
+    };
+  });
+
+  countByInputer.map((n) => {
+    totalCount.billing += n.data?.billing!;
+    totalCount.complete += n.data?.complete!;
+    totalCount.pending += n.data?.pending!;
+  });
+
+  return { countByInputer, totalCount };
 }
