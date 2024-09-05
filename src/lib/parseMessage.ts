@@ -261,6 +261,88 @@ export async function parseMessageBASObyInputer(sortedData: INPDATA[]) {
   return { messages };
 }
 
+export async function parseMessagePBA(
+  RBS: dataNCX[],
+  DGS: dataNCX[],
+  DPS: dataNCX[],
+  DSS: dataNCX[]
+) {
+  const date = new Date();
+  const day = date.getDate();
+  const month = getMonth(date.getMonth());
+  const year = date.getFullYear();
+  let messages: string[] = [];
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky"
+      ];
+    } else {
+      return name;
+    }
+  }
+
+  const rest = `<b>Order Status PBA</b> - DPS, DSS & RBS\n<i>Update : ${day} ${month} ${year}</i>\n\n${DPS.map(
+    (n) =>
+      `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+        n.SERVACCNTNAME?.length! > 13
+          ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+          : n.SERVACCNTNAME
+      } / ${filterLongName(n.LI_PRODUCT_NAME!)} / AM : ${
+        n.AM_VALIDASI.split(" ")[0]
+      }`
+  ).join("\n")}${DSS.length > 0 ? "\n":""}${DSS.map(
+    (n) =>
+      `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+        n.SERVACCNTNAME?.length! > 13
+          ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+          : n.SERVACCNTNAME
+      } / ${filterLongName(n.LI_PRODUCT_NAME!)} / AM : ${
+        n.AM_VALIDASI.split(" ")[0]
+      }`
+  ).join("\n")}${RBS.length > 0 ? "\n":""}${RBS.map(
+    (n) =>
+      `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+        n.SERVACCNTNAME?.length! > 13
+          ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+          : n.SERVACCNTNAME
+      } / ${filterLongName(n.LI_PRODUCT_NAME!)} / AM : ${
+        n.AM_VALIDASI.split(" ")[0]
+      }`
+  ).join("\n")}\n\nCc : <a href="tg://user?id=5233713214">@damayantitri</a> <a href="tg://user?id=5348800291">@budipratiwi</a> <a href="tg://user?id=5563612511">@khairasyifa</a>`;
+
+  const dgs = `<b>Order Status PBA</b> - DGS\n<i>Update : ${day} ${month} ${year}</i>\n\n${DGS.map(
+    (n) =>
+      `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+        n.SERVACCNTNAME?.length! > 13
+          ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+          : n.SERVACCNTNAME
+      } / ${filterLongName(n.LI_PRODUCT_NAME!)} / AM : ${
+        n.AM_VALIDASI.split(" ")[0]
+      }`
+  ).join("\n")}\n\nCc : <a href="tg://user?id=194252201">@Malik02</a>`;
+
+  messages.push(rest,dgs)
+
+  return { messages };
+}
+
 /**
  * This function is used to parse the message that contains In Progress sales data.
  *
@@ -327,9 +409,11 @@ export async function parseMessageCount(
     )
     .join(
       "\n\n"
-    )}\n\n----------------------------\n<b>Total All</b>\n- In Progress : ${totalCount.inprogress}\n- Pending Baso : ${
-    totalCount.pending
-  } Order\n- PBA : ${totalCount.billing} Order\n- Complete : ${
+    )}\n\n----------------------------\n<b>Total All</b>\n- In Progress : ${
+    totalCount.inprogress
+  }\n- Pending Baso : ${totalCount.pending} Order\n- PBA : ${
+    totalCount.billing
+  } Order\n- Complete : ${
     totalCount.complete
   } Order\n\ncc : pak <a href="tg://user?id=107034617">@aawaris</a> pak <a href="tg://user?id=21307163">@kfahmi90</a> pak <a href="tg://user?id=84620775">@raunsayGil</a>`;
 

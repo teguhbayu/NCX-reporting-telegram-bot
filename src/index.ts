@@ -6,13 +6,16 @@ import {
   sendCountbyInputerMessage,
   sendCountMessage,
   sendInProgressMessage,
+  sendPBAMessage,
   sendResumeMessage,
   sendSuspendMessage,
 } from "./lib/sendMessage";
 import { sleep } from "./utils/atomics";
+import bot from "./lib/bot";
 
 
 const chatId = process.env.GROUP_CHAT_ID!;
+const satgasChatId = process.env.SATGAS_CHAT_ID!;
 const suspendID = process.env.SUSPEND_TOPIC_ID! as unknown as number;
 const resumeID = process.env.RESUME_TOPIC_ID! as unknown as number;
 const pendingID = process.env.PENDING_TOPIC_ID! as unknown as number;
@@ -44,6 +47,9 @@ const job = schedule.scheduleJob("0 8 * * *", async function () {
   await sleep(5000);
   console.log("sending In Progress info...");
   await sendInProgressMessage(chatId, inPID, data);
+  await sleep(5000);
+  console.log("sending PBA info...");
+  await sendPBAMessage(satgasChatId, data)
   await sleep(5000);
   console.log("sending Progress info...");
   await sendCountMessage(chatId, progressID, data);

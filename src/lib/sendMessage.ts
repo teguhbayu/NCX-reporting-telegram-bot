@@ -2,6 +2,7 @@ import bot from "../lib/bot";
 import filterDataSuspend, {
   filterDataCount,
   filterDataCountbyInputers,
+  filterDataPBA,
   filterDataPendingBASO,
   filterDataPendingBASObyInputer,
   filterDataPendingProgres,
@@ -12,6 +13,7 @@ import parseMessageSuspend, {
   parseMessageBASObyInputer,
   parseMessageCount,
   parseMessageInProgress,
+  parseMessagePBA,
   parseMessageResume,
 } from "../lib/parseMessage";
 import type { dataQuery } from "../types/query";
@@ -112,6 +114,28 @@ export async function sendBASOMessage(
     await bot.sendMessage(chatId, "Internal Server Error", {
       parse_mode: "HTML",
       reply_to_message_id: basoID,
+    });
+  }
+}
+
+export async function sendPBAMessage(
+  chatId: string,
+  data: dataQuery
+) {
+  try {
+    const { RBS, DGS, DSS, DPS } = await filterDataPBA(data.data);
+    const { messages } = await parseMessagePBA(RBS, DGS, DSS, DPS);
+    for (let i = 0, len = messages.length, text = ""; i < len; i++) {
+      await bot.sendMessage(chatId, messages[i], {
+        parse_mode: "HTML",
+      });
+      recursiveLog(i, messages.length);
+      await sleep(3000);
+    }
+  } catch (e) {
+    console.log(e);
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
     });
   }
 }

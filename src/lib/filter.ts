@@ -51,6 +51,35 @@ export async function filterDataResume(data: dataNCX[]) {
   return { RBS, DGS, DPS, DSS };
 }
 
+export async function filterDataPBA(data: dataNCX[]) {
+  const RBS = data.filter((n) => {
+    return (
+      n.LI_STATUS === "Pending Billing Approval" &&
+      n.SEGMENT_VALIDASI === "RBS"
+    );
+  });
+  const DGS = data.filter((n) => {
+    return (
+      n.LI_STATUS === "Pending Billing Approval" &&
+      n.SEGMENT_VALIDASI === "DGS"
+    );
+  });
+  const DPS = data.filter((n) => {
+    return (
+      n.LI_STATUS === "Pending Billing Approval" &&
+      n.SEGMENT_VALIDASI === "DPS"
+    );
+  });
+  const DSS = data.filter((n) => {
+    return (
+      n.LI_STATUS === "Pending Billing Approval" &&
+      n.SEGMENT_VALIDASI === "DSS"
+    );
+  });
+
+  return { RBS, DGS, DPS, DSS };
+}
+
 export async function filterDataPendingBASO(data: dataNCX[]) {
   const admins = [
     "AMAR, KANA",
