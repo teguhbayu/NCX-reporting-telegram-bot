@@ -165,12 +165,33 @@ export async function parseMessageBASO(sortedData: AMDATA[]) {
   const month = getMonth(date.getMonth());
   const year = date.getFullYear();
   let messages: string[] = [];
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky"
+      ];
+    } else {
+      return name;
+    }
+  }
 
   sortedData.map((i) => {
-    if (
-      i.name === "MUHAMMAD, MUHAMMAD" ||
-      i.name === "RIESKA ALFIAH, RANIYANTI"
-    ) {
       messages.push(
         `<b>Order Status Pending BASO - ${i.name}</b> (<a href="tg://user?id=${
           i.id
@@ -179,24 +200,16 @@ export async function parseMessageBASO(sortedData: AMDATA[]) {
         }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
           .map(
             (n) =>
-              `🔴 ${n.ORDER_ID} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.SEGMENT_VALIDASI}`
+              `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${
+              n.SERVACCNTNAME?.length! > 13
+                ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+                : n.SERVACCNTNAME
+            } / ${filterLongName(n.LI_PRODUCT_NAME!)} / Inputer : ${
+              n.INPUTER_VALIDASI
+            }`
           )
           .join("\n")}`
       );
-    } else {
-      messages.push(
-        `<b>Order Status Pending BASO - ${i.name}</b> (<a href="tg://user?id=${
-          i.id
-        }">${
-          i.username
-        }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
-          .map(
-            (n) =>
-              `🔴 ${n.ORDER_ID} / ${n.ORDER_SUBTYPE} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.AGREE_NAME} / ${n.SEGMENT_VALIDASI} / End Date : ${n.AGREE_END_DATE}`
-          )
-          .join("\n")}`
-      );
-    }
   });
 
   return { messages };
