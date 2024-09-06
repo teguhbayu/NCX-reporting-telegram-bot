@@ -114,6 +114,34 @@ export default async function parseMessageSuspend(
     },
   };
 
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+    "TELKOM Addendum VPN IP": "VPN IP"
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky" ||
+      name === "TELKOM Addendum VPN IP"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky" | "TELKOM Addendum VPN IP"
+      ];
+    } else {
+      return name;
+    }
+  }
+
   const rbs = `<b>Order Status Suspend - RBS Sulbagteng</b>
 <i>Update : ${day} ${month} ${year}</i>
 
@@ -129,7 +157,7 @@ ${RBS.map(
 👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
       admins[i.AM_VALIDASI].id
     }">${admins[i.AM_VALIDASI].username}</a>
-📑 ${i.LI_PRODUCT_NAME}
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
       inputers[i.INPUTER_VALIDASI].id
     }">${inputers[i.INPUTER_VALIDASI].username}</a>`
@@ -150,7 +178,7 @@ ${DGS.map(
 👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
       admins[i.AM_VALIDASI].id
     }">${admins[i.AM_VALIDASI].username}</a>
-📑 ${i.LI_PRODUCT_NAME}
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
       inputers[i.INPUTER_VALIDASI].id
     }">${inputers[i.INPUTER_VALIDASI].username}</a>`
@@ -173,7 +201,7 @@ ${DPS.map(
 👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
       admins[i.AM_VALIDASI].id
     }">${admins[i.AM_VALIDASI].username}</a>
-📑 ${i.LI_PRODUCT_NAME}
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
       inputers[i.INPUTER_VALIDASI].id
     }">${inputers[i.INPUTER_VALIDASI].username}</a>`
@@ -196,7 +224,7 @@ ${DSS.map(
 👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
       admins[i.AM_VALIDASI].id
     }">${admins[i.AM_VALIDASI].username}</a>
-📑 ${i.LI_PRODUCT_NAME}
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
       inputers[i.INPUTER_VALIDASI].id
     }">${inputers[i.INPUTER_VALIDASI].username}</a>`
@@ -225,31 +253,166 @@ export async function parseMessageResume(
   const day = date.getDate();
   const month = getMonth(date.getMonth());
   const year = date.getFullYear();
+  const inputers = {
+    KARINA: {
+      username: "@karinaspoliyama",
+      id: "5200640067",
+    },
+    MAGFIRAH: {
+      username: "@Magfirha",
+      id: "116744785",
+    },
+    NOVITA: {
+      username: "@novitazf",
+      id: "1008894420",
+    },
+    SIFA: {
+      username: "@Silfa_BGES",
+      id: "107580671",
+    },
+    WAWAN: {
+      username: "@Andiwawan",
+      id: "5033717404",
+    },
+    YANTO: {
+      username: "@MohNuryanto",
+      id: "97404704",
+    },
+    YUNI: {
+      username: "@yuniakadji",
+      id: "450302218",
+    },
+  };
+
+  const admins = {
+    "AMAR, KANA": {
+      username: "@kana_amar",
+      id: "104111782",
+    },
+    "ARIEF RAHMAN": {
+      username: "@ariefr4",
+      id: "506038155",
+    },
+    "BAWIAS, RIVO": {
+      username: "@ipongalai",
+      id: "491601656",
+    },
+    "DJABAR TIMUMUN": {
+      username: "@Djabar_BGES",
+      id: "110506213",
+    },
+    "FAJAR, MARWAN": {
+      username: "@Marwanfajar",
+      id: "5206603276",
+    },
+    "FIKRI RAMADAN, MOH.": {
+      username: "@L_Fikri",
+      id: "271825149",
+    },
+    "HALID, FITYAN": {
+      username: "@fityanhalid",
+      id: "264343410",
+    },
+    "LIMONU, DESRIYANTI": {
+      username: "@ecylimonu",
+      id: "350728586",
+    },
+    "MUHAMMAD, MUHAMMAD": {
+      username: "@Matong88",
+      id: "175501176",
+    },
+    "NUGROHO, AGUNG": {
+      username: "@agungnugroho9605",
+      id: "5591009493",
+    },
+    "P. TOAGO, SADDAM": {
+      username: "@Saddam_BKU",
+      id: "221136697",
+    },
+    "PRAMONO RAUF, MOH.INDRA": {
+      username: "@indrarauf",
+      id: "117794621",
+    },
+    "RIESKA ALFIAH, RANIYANTI": {
+      username: "@rieskaalfiah",
+      id: "822091091",
+    },
+    "SHINTA KRISTIANTI, THERESIA": {
+      username: "@thrsshinta",
+      id: "1865032257",
+    },
+    "ZULFIKAR, ZULFIKAR": {
+      username: "@AMzulfikar",
+      id: "755954432",
+    },
+  };
+
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+    "TELKOM Addendum VPN IP": "VPN IP"
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky" ||
+      name === "TELKOM Addendum VPN IP"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky" | "TELKOM Addendum VPN IP"
+      ];
+    } else {
+      return name;
+    }
+  }
+
   const rbs = `<b>Order Status Resume - RBS Sulbagteng</b>
 <i>Update : ${day} ${month} ${year}</i>
 
 ${RBS.map(
   (i) =>
-    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
+    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME?.length! > 10
+        ? i.SERVACCNTNAME?.substring(0, 10) + "..."
+        : i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}
-📑 ${i.LI_PRODUCT_NAME}
+👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
+      admins[i.AM_VALIDASI].id
+    }">${admins[i.AM_VALIDASI].username}</a>
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 🔔Status : ${i.LI_STATUS}
-📆End Date Kontrak : ${i.AGREE_END_DATE}`
-).join("\n-----------\n")}
-cc : pak <a href="tg://user?id=107034617">@aawaris</a>`;
+📆End Date Kontrak : ${i.AGREE_END_DATE}
+👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
+      inputers[i.INPUTER_VALIDASI].id
+    }">${inputers[i.INPUTER_VALIDASI].username}</a>`
+).join("\n-----------\n")}\n\ncc : pak <a href="tg://user?id=107034617">@aawaris</a>`;
 
   const dgs = `<b>Order Status Resume - DGS Sulbagteng</b>
 <i>Update : ${day} ${month} ${year}</i>
 
 ${DGS.map(
   (i) =>
-    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
+    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME?.length! > 10
+        ? i.SERVACCNTNAME?.substring(0, 10) + "..."
+        : i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}
-📑 ${i.LI_PRODUCT_NAME}
+👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
+      admins[i.AM_VALIDASI].id
+    }">${admins[i.AM_VALIDASI].username}</a>
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 🔔Status : ${i.LI_STATUS}
-📆End Date Kontrak : ${i.AGREE_END_DATE}`
+📆End Date Kontrak : ${i.AGREE_END_DATE}
+👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
+      inputers[i.INPUTER_VALIDASI].id
+    }">${inputers[i.INPUTER_VALIDASI].username}</a>`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=84620775">@raunsayGil</a>`;
@@ -259,12 +422,19 @@ cc : pak <a href="tg://user?id=84620775">@raunsayGil</a>`;
 
 ${DPS.map(
   (i) =>
-    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
+    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME?.length! > 10
+        ? i.SERVACCNTNAME?.substring(0, 10) + "..."
+        : i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}
-📑 ${i.LI_PRODUCT_NAME}
+👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
+      admins[i.AM_VALIDASI].id
+    }">${admins[i.AM_VALIDASI].username}</a>
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 🔔Status : ${i.LI_STATUS}
-📆End Date Kontrak : ${i.AGREE_END_DATE}`
+📆End Date Kontrak : ${i.AGREE_END_DATE}
+👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
+      inputers[i.INPUTER_VALIDASI].id
+    }">${inputers[i.INPUTER_VALIDASI].username}</a>`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
@@ -274,12 +444,19 @@ cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
 
 ${DSS.map(
   (i) =>
-    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME}
+    `🔴 RO <a href="${i.ORDER_ID}">${i.ORDER_ID}</a> ${i.SERVACCNTNAME?.length! > 10
+        ? i.SERVACCNTNAME?.substring(0, 10) + "..."
+        : i.SERVACCNTNAME}
 💬 ${i.CHANGE_REASON_CD}
-👤 ${i.AM_VALIDASI}
-📑 ${i.LI_PRODUCT_NAME}
+👤 AM : ${i.AM_VALIDASI.split(" ")[0]} <a href="tg://user?id=${
+      admins[i.AM_VALIDASI].id
+    }">${admins[i.AM_VALIDASI].username}</a>
+📑 ${filterLongName(i.LI_PRODUCT_NAME!)}
 🔔Status : ${i.LI_STATUS}
-📆End Date Kontrak : ${i.AGREE_END_DATE}`
+📆End Date Kontrak : ${i.AGREE_END_DATE}
+👤 Inputer : ${i.INPUTER_VALIDASI} <a href="tg://user?id=${
+      inputers[i.INPUTER_VALIDASI].id
+    }">${inputers[i.INPUTER_VALIDASI].username}</a>`
 ).join("\n-----------\n")}
 
 cc : pak <a href="tg://user?id=21307163">@kfahmi90</a>`;
