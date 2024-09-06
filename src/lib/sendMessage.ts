@@ -47,7 +47,10 @@ export async function sendSuspendMessage(
     console.log("Message sent!");
   } catch (e) {
     console.log(e);
-    await bot.sendMessage(chatId, "Internal Server Error");
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
+      reply_to_message_id: suspendID,
+    });
   }
 }
 
@@ -118,10 +121,7 @@ export async function sendBASOMessage(
   }
 }
 
-export async function sendPBAMessage(
-  chatId: string,
-  data: dataQuery
-) {
+export async function sendPBAMessage(chatId: string, data: dataQuery) {
   try {
     const { RBS, DGS, DSS, DPS } = await filterDataPBA(data.data);
     const { messages } = await parseMessagePBA(RBS, DGS, DSS, DPS);
@@ -235,7 +235,9 @@ export async function sendCountbyInputerMessage(
   data: dataQuery
 ) {
   try {
-    const { countByInputer, totalCount } = await filterDataCountbyInputers(data.data);
+    const { countByInputer, totalCount } = await filterDataCountbyInputers(
+      data.data
+    );
     const message = await parseMessageCount(countByInputer, totalCount);
 
     await bot.sendMessage(chatId, message, {

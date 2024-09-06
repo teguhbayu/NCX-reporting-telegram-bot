@@ -24,6 +24,8 @@ const pendingInpPID = process.env.PENDING_INP_TOPIC_ID! as unknown as number;
 
 console.log("Running Telegram Bot");
 
+const data = await getData();
+
 const job = schedule.scheduleJob("0 8 * * *", async function () {
   console.log("syncing DB data...");
   const sync = await syncData();
