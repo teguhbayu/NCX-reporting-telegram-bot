@@ -1,5 +1,6 @@
 import type dataNCX from "../types/data";
-import type { AMDATA, COUNTDATA, INPDATA } from "../types/data";
+import type { AMDATA, COUNTDATA, INPDATA, month } from "../types/data";
+import { getMonthIndex } from "../utils/atomics";
 
 export default async function filterDataSuspend(data: dataNCX[]) {
   const RBS = data.filter((n) => {
@@ -676,4 +677,143 @@ export async function filterDataCountbyInputers(data: dataNCX[]) {
   });
 
   return { countByInputer, totalCount };
+}
+
+export async function filterDataEDK(data: dataNCX[]) {
+  const admins = [
+    "AMAR, KANA",
+    "ARIEF RAHMAN",
+    "BAWIAS, RIVO",
+    "DJABAR TIMUMUN",
+    "FAJAR, MARWAN",
+    "FIKRI RAMADAN, MOH.",
+    "HALID, FITYAN",
+    "LIMONU, DESRIYANTI",
+    "MUHAMMAD, MUHAMMAD",
+    "NUGROHO, AGUNG",
+    "P. TOAGO, SADDAM",
+    "PRAMONO RAUF, MOH.INDRA",
+    "RIESKA ALFIAH, RANIYANTI",
+    "SHINTA KRISTIANTI, THERESIA",
+    "ZULFIKAR, ZULFIKAR",
+  ];
+
+  let dataByAM: AMDATA[] = [
+    {
+      name: "AMAR, KANA",
+      username: "@kana_amar",
+      id: "104111782",
+      data: [],
+    },
+    {
+      name: "ARIEF RAHMAN",
+      username: "@ariefr4",
+      id: "506038155",
+      data: [],
+    },
+    {
+      name: "BAWIAS, RIVO",
+      username: "@ipongalai",
+      id: "491601656",
+      data: [],
+    },
+    {
+      name: "DJABAR TIMUMUN",
+      username: "@Djabar_BGES",
+      id: "110506213",
+      data: [],
+    },
+    {
+      name: "FAJAR, MARWAN",
+      username: "@Marwanfajar",
+      id: "5206603276",
+      data: [],
+    },
+    {
+      name: "FIKRI RAMADAN, MOH.",
+      username: "@L_Fikri",
+      id: "271825149",
+      data: [],
+    },
+    {
+      name: "HALID, FITYAN",
+      username: "@fityanhalid",
+      id: "264343410",
+      data: [],
+    },
+    {
+      name: "LIMONU, DESRIYANTI",
+      username: "@ecylimonu",
+      id: "350728586",
+      data: [],
+    },
+    {
+      name: "MUHAMMAD, MUHAMMAD",
+      username: "@Matong88",
+      id: "175501176",
+      data: [],
+    },
+    {
+      name: "NUGROHO, AGUNG",
+      username: "@agungnugroho9605",
+      id: "5591009493",
+      data: [],
+    },
+    {
+      name: "P. TOAGO, SADDAM",
+      username: "@Saddam_BKU",
+      id: "221136697",
+      data: [],
+    },
+    {
+      name: "PRAMONO RAUF, MOH.INDRA",
+      username: "@indrarauf",
+      id: "117794621",
+      data: [],
+    },
+    {
+      name: "RIESKA ALFIAH, RANIYANTI",
+      username: "@rieskaalfiah",
+      id: "822091091",
+      data: [],
+    },
+    {
+      name: "SHINTA KRISTIANTI, THERESIA",
+      username: "@thrsshinta",
+      id: "1865032257",
+      data: [],
+    },
+    {
+      name: "ZULFIKAR, ZULFIKAR",
+      username: "@AMzulfikar",
+      id: "755954432",
+      data: [],
+    },
+  ];
+
+  function isMoreThanNow(unformated:string|undefined){
+    if (!unformated) return false
+
+    const date = unformated.split("-")
+    const dataDate = new Date(`20${date![2]}-${getMonthIndex(date![1] as month)}-${date![0]}`)
+    const now = new Date()
+    const nowButOnlyDate = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`)
+    
+    return dataDate > nowButOnlyDate
+  }
+
+  admins.map((admin) => {
+    let currentAM = dataByAM.filter((i) => {
+      return i.name === admin;
+    });
+    currentAM[0].data = data.filter((n) => {
+      return (
+        n.EDK_STATUS === "Belum Input - Ready" &&
+        n.AM_VALIDASI === admin &&
+        !isMoreThanNow(n.AGREE_END_DATE)
+      );
+    });
+  });
+
+  return { dataByAM };
 }

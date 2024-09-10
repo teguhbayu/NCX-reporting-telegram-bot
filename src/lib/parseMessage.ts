@@ -852,3 +852,102 @@ export async function parseMessageCount(
 
   return message;
 }
+
+export async function parseMessageEDK(sortedData: AMDATA[]) {
+  const date = new Date();
+  const day = date.getDate();
+  const month = getMonth(date.getMonth());
+  const year = date.getFullYear();
+  let messages: string[] = [];
+  const Abbr = {
+    Disconnect: "DO",
+    Modify: "MO",
+    "Modify BA": "MO BA",
+    "Modify Price": "MO Price",
+    "New Install": "AO",
+    "Renewal Agreement": "RE",
+    Resume: "RO",
+    Suspend: "SO",
+    "Wifi Managed Service": "WMS",
+    "Satelit Internet Broadband MangoeSky": "MangoeSky",
+  };
+  const inputers = {
+    KARINA: {
+      username: "@karinaspoliyama",
+      id: "5200640067",
+    },
+    MAGFIRAH: {
+      username: "@Magfirha",
+      id: "116744785",
+    },
+    NOVITA: {
+      username: "@novitazf",
+      id: "1008894420",
+    },
+    SIFA: {
+      username: "@Silfa_BGES",
+      id: "107580671",
+    },
+    WAWAN: {
+      username: "@Andiwawan",
+      id: "5033717404",
+    },
+    YANTO: {
+      username: "@MohNuryanto",
+      id: "97404704",
+    },
+    YUNI: {
+      username: "@yuniakadji",
+      id: "450302218",
+    },
+  };
+
+  function filterLongName(name: string) {
+    if (
+      name === "Wifi Managed Service" ||
+      name === "Satelit Internet Broadband MangoeSky"
+    ) {
+      return Abbr[
+        name as "Wifi Managed Service" | "Satelit Internet Broadband MangoeSky"
+      ];
+    } else {
+      return name;
+    }
+  }
+
+  sortedData.map((i) => {
+    if(i.name ==="MUHAMMAD, MUHAMMAD"){
+      messages.push(
+        `Order Butuh Follow Up Input (MO/DO/RE)\n👤 AM : ${i.name.split(" ")[0]} (<a href="tg://user?id=${
+          i.id
+        }">${i.username}</a>)\n👤 Inputer : ${i.data[0] ? i.data[0].INPUTER_VALIDASI : "-"} ${i.data[0] ? `(<a href="tg://user?id=${inputers[i.data[0].INPUTER_VALIDASI].id}">${inputers[i.data[0].INPUTER_VALIDASI].username}</a>)`:""}\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+          .map(
+            (n) =>
+              `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ...${n.AGREE_NAME?.substring((n.AGREE_NAME.length-10),n.AGREE_NAME.length)} / ${
+                n.SERVACCNTNAME?.length! > 13
+                  ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+                  : n.SERVACCNTNAME
+              } / ${filterLongName(n.LI_PRODUCT_NAME!)} / End Date : ${n.AGREE_END_DATE}`
+          )
+          .join("\n")}`
+      );
+    }
+    else{
+    messages.push(
+      `Order Butuh Follow Up Input (MO/DO/RE)\n👤 AM : ${i.name.split(" ")[0]} (<a href="tg://user?id=${
+        i.id
+      }">${i.username}</a>)\n👤 Inputer : ${i.data[0] ? i.data[0].INPUTER_VALIDASI : "-"} ${i.data[0] ? `(<a href="tg://user?id=${inputers[i.data[0].INPUTER_VALIDASI].id}">${inputers[i.data[0].INPUTER_VALIDASI].username}</a>)`:""}\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+        .map(
+          (n) =>
+            `🔴 ${n.ORDER_ID} / ${Abbr[n.ORDER_SUBTYPE]} / ${n.AGREE_NAME} / ${
+              n.SERVACCNTNAME?.length! > 13
+                ? n.SERVACCNTNAME?.substring(0, 13) + "...."
+                : n.SERVACCNTNAME
+            } / ${filterLongName(n.LI_PRODUCT_NAME!)} / End Date : ${n.AGREE_END_DATE}`
+        )
+        .join("\n")}`
+    );
+  }
+  })
+  return { messages };
+}

@@ -53,7 +53,13 @@ export default interface dataNCX {
   CUST_WITEL: string | undefined;
   BILL_WITEL: string | undefined;
   SERVICE_WITEL: string | undefined;
-  EDK_STATUS: string | undefined;
+  EDK_STATUS:
+    | "Bukan Populasi EDK"
+    | "OGP"
+    | "Belum Input - Not Ready"
+    | "Belum Input - Ready"
+    | "Invalid Date"
+    | "Cancel Order";
   SEGMENT_VALIDASI: "DGS" | "DPS" | "DSS" | "RBS";
   AM_VALIDASI:
     | "AMAR, KANA"
@@ -113,7 +119,7 @@ export interface dataCount {
   pending: number;
   billing: number;
   complete: number;
-  inprogress:number;
+  inprogress: number;
 }
 
 export interface COUNTDATA {
@@ -144,3 +150,5 @@ export interface COUNTDATA {
   id: string;
   data?: dataCount;
 }
+
+export type month = "JAN"|"FEB"|"MAR"|"APR"|"MAY"|"JUN"|"JUL"|"AUG"|"SEP"|"OCT"|"NOV"|"DEC"

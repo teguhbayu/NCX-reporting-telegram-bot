@@ -5,6 +5,7 @@ import {
   sendBASOMessagebyInputer,
   sendCountbyInputerMessage,
   sendCountMessage,
+  sendEDKMessage,
   sendInProgressMessage,
   sendPBAMessage,
   sendResumeMessage,
@@ -21,6 +22,7 @@ const pendingID = process.env.PENDING_TOPIC_ID! as unknown as number;
 const progressID = process.env.PROGRESS_TOPIC_ID! as unknown as number;
 const inPID = process.env.INP_TOPIC_ID! as unknown as number;
 const pendingInpPID = process.env.PENDING_INP_TOPIC_ID! as unknown as number;
+const edkPID = process.env.EDK_TOPIC_ID! as unknown as number;
 
 console.log("Running Telegram Bot");
 
@@ -49,6 +51,9 @@ const job = schedule.scheduleJob("0 8 * * *", async function () {
   await sleep(5000);
   console.log("sending PBA info...");
   await sendPBAMessage(satgasChatId, data)
+  await sleep(5000);
+  console.log("sending EDK info...");
+  await sendEDKMessage(chatId, edkPID,data)
   await sleep(5000);
   console.log("sending Progress info...");
   await sendCountMessage(chatId, progressID, data);

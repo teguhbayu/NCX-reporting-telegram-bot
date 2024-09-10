@@ -2,6 +2,7 @@ import bot from "../lib/bot";
 import filterDataSuspend, {
   filterDataCount,
   filterDataCountbyInputers,
+  filterDataEDK,
   filterDataPBA,
   filterDataPendingBASO,
   filterDataPendingBASObyInputer,
@@ -12,6 +13,7 @@ import parseMessageSuspend, {
   parseMessageBASO,
   parseMessageBASObyInputer,
   parseMessageCount,
+  parseMessageEDK,
   parseMessageInProgress,
   parseMessagePBA,
   parseMessageResume,
@@ -250,6 +252,39 @@ export async function sendCountbyInputerMessage(
     await bot.sendMessage(chatId, "Internal Server Error", {
       parse_mode: "HTML",
       reply_to_message_id: countID,
+    });
+  }
+}
+
+export async function sendEDKMessage(
+  chatId: string,
+  basoID: number,
+  data: dataQuery
+) {
+  try {
+    const { dataByAM } = await filterDataEDK(data.data);
+    const { messages } = await parseMessageEDK(dataByAM);
+    for (let i = 0, len = messages.length, text = ""; i < len; i++) {
+      await bot.sendMessage(chatId, messages[i], {
+        parse_mode: "HTML",
+        reply_to_message_id: basoID,
+      });
+      recursiveLog(i, messages.length);
+      await sleep(3000);
+    }
+    await bot.sendMessage(
+      chatId,
+      'Berikut Report Data EDK yang butuh segera diinput segera, karena status sudah ready to input\n\ncc : pak <a href="tg://user?id=1336572330">@jrilopratama</a>\ncc : pak <a href="tg://user?id=61933142">@Rio_Palu</a>',
+      {
+        parse_mode: "HTML",
+        reply_to_message_id: basoID,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    await bot.sendMessage(chatId, "Internal Server Error", {
+      parse_mode: "HTML",
+      reply_to_message_id: basoID,
     });
   }
 }
