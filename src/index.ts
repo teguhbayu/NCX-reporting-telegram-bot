@@ -13,7 +13,6 @@ import {
 } from "./lib/sendMessage";
 import { sleep } from "./utils/atomics";
 
-
 const chatId = process.env.GROUP_CHAT_ID!;
 const satgasChatId = process.env.SATGAS_CHAT_ID!;
 const suspendID = process.env.SUSPEND_TOPIC_ID! as unknown as number;
@@ -50,10 +49,10 @@ const job = schedule.scheduleJob("0 8 * * *", async function () {
   await sendInProgressMessage(chatId, inPID, data);
   await sleep(5000);
   console.log("sending PBA info...");
-  await sendPBAMessage(satgasChatId, data)
+  await sendPBAMessage(satgasChatId, data);
   await sleep(5000);
   console.log("sending EDK info...");
-  await sendEDKMessage(chatId, edkPID,data)
+  await sendEDKMessage(chatId, edkPID, data);
   await sleep(5000);
   console.log("sending Progress info...");
   await sendCountMessage(chatId, progressID, data);

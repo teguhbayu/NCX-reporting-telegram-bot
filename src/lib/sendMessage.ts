@@ -30,22 +30,30 @@ export async function sendSuspendMessage(
   try {
     const { RBS, DGS, DPS, DSS } = await filterDataSuspend(data.data);
     const message = await parseMessageSuspend(RBS, DGS, DPS, DSS);
-    await bot.sendMessage(chatId, message.rbs, {
-      parse_mode: "HTML",
-      reply_to_message_id: suspendID,
-    });
-    await bot.sendMessage(chatId, message.dgs, {
-      parse_mode: "HTML",
-      reply_to_message_id: suspendID,
-    });
-    await bot.sendMessage(chatId, message.dps, {
-      parse_mode: "HTML",
-      reply_to_message_id: suspendID,
-    });
-    await bot.sendMessage(chatId, message.dss, {
-      parse_mode: "HTML",
-      reply_to_message_id: suspendID,
-    });
+    message.rbs
+      ? await bot.sendMessage(chatId, message.rbs, {
+          parse_mode: "HTML",
+          reply_to_message_id: suspendID,
+        })
+      : console.log("skipped RBS");
+    message.dgs
+      ? await bot.sendMessage(chatId, message.dgs, {
+          parse_mode: "HTML",
+          reply_to_message_id: suspendID,
+        })
+      : console.log("skipped DGS");
+    message.dps
+      ? await bot.sendMessage(chatId, message.dps, {
+          parse_mode: "HTML",
+          reply_to_message_id: suspendID,
+        })
+      : console.log("Skipped DPS");
+    message.dss
+      ? await bot.sendMessage(chatId, message.dss, {
+          parse_mode: "HTML",
+          reply_to_message_id: suspendID,
+        })
+      : console.log("skipped dss");
     console.log("Message sent!");
   } catch (e) {
     console.log(e);
@@ -64,22 +72,30 @@ export async function sendResumeMessage(
   try {
     const { RBS, DGS, DPS, DSS } = await filterDataResume(data.data);
     const message = await parseMessageResume(RBS, DGS, DPS, DSS);
-    await bot.sendMessage(chatId, message.rbs, {
-      parse_mode: "HTML",
-      reply_to_message_id: resumeID,
-    });
-    await bot.sendMessage(chatId, message.dgs, {
-      parse_mode: "HTML",
-      reply_to_message_id: resumeID,
-    });
-    await bot.sendMessage(chatId, message.dps, {
-      parse_mode: "HTML",
-      reply_to_message_id: resumeID,
-    });
-    await bot.sendMessage(chatId, message.dss, {
-      parse_mode: "HTML",
-      reply_to_message_id: resumeID,
-    });
+    message.rbs
+      ? await bot.sendMessage(chatId, message.rbs, {
+          parse_mode: "HTML",
+          reply_to_message_id: resumeID,
+        })
+      : console.log("skipped RBS");
+    message.dgs
+      ? await bot.sendMessage(chatId, message.dgs, {
+          parse_mode: "HTML",
+          reply_to_message_id: resumeID,
+        })
+      : console.log("skipped DGS");
+    message.dps
+      ? await bot.sendMessage(chatId, message.dps, {
+          parse_mode: "HTML",
+          reply_to_message_id: resumeID,
+        })
+      : console.log("skipped DPS");
+    message.dss
+      ? await bot.sendMessage(chatId, message.dss, {
+          parse_mode: "HTML",
+          reply_to_message_id: resumeID,
+        })
+      : console.log("skipped DSS");
     console.log("Message sent!");
   } catch (e) {
     console.log(e);
@@ -128,9 +144,11 @@ export async function sendPBAMessage(chatId: string, data: dataQuery) {
     const { RBS, DGS, DSS, DPS } = await filterDataPBA(data.data);
     const { messages } = await parseMessagePBA(RBS, DGS, DSS, DPS);
     for (let i = 0, len = messages.length, text = ""; i < len; i++) {
-      await bot.sendMessage(chatId, messages[i], {
-        parse_mode: "HTML",
-      });
+      messages[i]
+        ? await bot.sendMessage(chatId, messages[i]!, {
+            parse_mode: "HTML",
+          })
+        : console.log("skipped");
       recursiveLog(i, messages.length);
       await sleep(3000);
     }
