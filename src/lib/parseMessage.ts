@@ -841,20 +841,19 @@ export async function parseMessageInProgress(sortedData: AMDATA[]) {
   let messages: string[] = [];
 
   sortedData.map((i) => {
-    if (i.name === "MUHAMMAD, MUHAMMAD") {
-      if (i.data.length > 0)
-        messages.push(
-          `<b>Order Status In Progress - ${i.name}</b> (<a href="tg://user?id=${
-            i.id
-          }">${
-            i.username
-          }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
-            .map(
-              (n) =>
-                `🔴 ${n.ORDER_ID} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.SEGMENT_VALIDASI}`
-            )
-            .join("\n")}`
-        );
+    if (i.data.length > 0 && i.data.length > 30) {
+      messages.push(
+        `<b>Order Status In Progress - ${i.name}</b> (<a href="tg://user?id=${
+          i.id
+        }">${
+          i.username
+        }</a>)\n<i>Update : ${day} ${month} ${year}</i>\n\n${i.data
+          .map(
+            (n) =>
+              `🔴 ${n.ORDER_ID} / ${n.SERVACCNTNAME} / ${n.LI_PRODUCT_NAME} / ${n.SEGMENT_VALIDASI}`
+          )
+          .join("\n")}`
+      );
     } else {
       if (i.data.length > 0)
         messages.push(
